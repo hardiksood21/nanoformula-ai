@@ -1,0 +1,25 @@
+Algorithm,Target,R2,RMSE,MAE,MAPE,Pearson_r
+Extra Trees,PLGA Particle Size,0.7491,50.61,28.36,15.81,0.867
+NanoFormula Ensemble,PLGA Particle Size,0.7148,53.96,26.93,15.5,0.8471
+XGBoost,PLGA Particle Size,0.6969,55.63,26.97,15.0,0.8381
+Gradient Boosting,PLGA Particle Size,0.6676,58.26,29.51,16.93,0.8209
+Random Forest,PLGA Particle Size,0.6662,58.38,28.59,16.56,0.8219
+Multi-Layer Perceptron,PLGA Particle Size,0.6027,63.69,38.71,22.93,0.7766
+Support Vector Regressor,PLGA Particle Size,0.3964,78.5,40.6,22.26,0.7485
+Ridge Regression,PLGA Particle Size,0.3243,83.06,54.93,32.71,0.5734
+NanoFormula Ensemble,PLGA EE%,0.6686,13.57,8.81,31.4,0.8178
+Random Forest,PLGA EE%,0.6526,13.89,9.31,34.41,0.808
+XGBoost,PLGA EE%,0.6511,13.92,8.91,30.32,0.8072
+Gradient Boosting,PLGA EE%,0.6487,13.97,9.34,31.81,0.8055
+Extra Trees,PLGA EE%,0.6399,14.14,9.75,31.4,0.8004
+Support Vector Regressor,PLGA EE%,0.5227,16.28,11.27,69.25,0.7339
+Multi-Layer Perceptron,PLGA EE%,0.4584,17.35,12.75,52.15,0.6783
+Ridge Regression,PLGA EE%,0.1991,21.09,16.62,87.37,0.4531
+NanoFormula Ensemble,PLGA LC%,0.8663,2.61,1.25,42.09,0.9309
+Extra Trees,PLGA LC%,0.8653,2.62,1.36,46.99,0.931
+Random Forest,PLGA LC%,0.8536,2.73,1.37,43.34,0.924
+Multi-Layer Perceptron,PLGA LC%,0.8526,2.74,1.39,61.34,0.9254
+XGBoost,PLGA LC%,0.8434,2.83,1.26,44.28,0.9186
+Gradient Boosting,PLGA LC%,0.8356,2.9,1.31,50.07,0.9144
+Support Vector Regressor,PLGA LC%,0.8196,3.03,1.5,58.41,0.9054
+Ridge Regression,PLGA LC%,0.6716,4.09,2.81,134.49,0.8199

@@ -1,0 +1,25 @@
+Algorithm,Target,R2,RMSE,MAE,MAPE,Pearson_r
+XGBoost,Chitosan Size,0.7576,19.24,11.19,8.23,0.8836
+Random Forest,Chitosan Size,0.7337,20.16,12.46,9.34,0.8651
+NanoFormula Ensemble,Chitosan Size,0.6898,21.76,12.66,9.3,0.8358
+Ridge Regression,Chitosan Size,0.6765,22.22,15.63,12.66,0.823
+Gradient Boosting,Chitosan Size,0.6639,22.65,13.47,10.02,0.8186
+Extra Trees,Chitosan Size,0.6039,24.59,14.87,10.97,0.7821
+Multi-Layer Perceptron,Chitosan Size,0.5357,26.62,20.48,17.74,0.7516
+Support Vector Regressor,Chitosan Size,0.4348,29.37,17.66,13.43,0.7247
+Ridge Regression,Chitosan PDI,0.4171,0.05,0.04,14.96,0.6615
+Random Forest,Chitosan PDI,0.3895,0.05,0.04,14.06,0.6461
+NanoFormula Ensemble,Chitosan PDI,0.3565,0.05,0.04,14.23,0.6541
+XGBoost,Chitosan PDI,0.3551,0.05,0.04,14.47,0.6662
+Extra Trees,Chitosan PDI,0.2032,0.05,0.04,16.37,0.6092
+Gradient Boosting,Chitosan PDI,0.1715,0.06,0.04,15.59,0.5858
+Support Vector Regressor,Chitosan PDI,-0.1012,0.06,0.05,22.33,0.315
+Multi-Layer Perceptron,Chitosan PDI,-0.3306,0.07,0.06,20.33,0.5348
+Extra Trees,Chitosan Zeta,0.8126,2.35,1.71,9.69,0.9017
+NanoFormula Ensemble,Chitosan Zeta,0.7931,2.47,1.55,9.25,0.8922
+XGBoost,Chitosan Zeta,0.779,2.56,1.68,9.6,0.8857
+Random Forest,Chitosan Zeta,0.7611,2.66,1.77,10.76,0.8762
+Gradient Boosting,Chitosan Zeta,0.7473,2.73,1.7,10.39,0.8699
+Ridge Regression,Chitosan Zeta,0.7414,2.76,1.91,10.91,0.8666
+Support Vector Regressor,Chitosan Zeta,0.7263,2.84,1.95,10.61,0.8552
+Multi-Layer Perceptron,Chitosan Zeta,0.6595,3.17,2.14,11.89,0.8412
