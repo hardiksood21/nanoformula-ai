@@ -632,12 +632,13 @@ with tab_about:
     ---
     #### 📖 Suggested Citation
     ```bibtex
-    @article{sood2026nanoformula,
-      title={NanoFormula AI: Machine Learning-Driven Multi-Objective Nanoparticle Formulation Optimization and Virtual Screening},
-      author={Sood, Hardik and Chawla, Ruchi},
-      journal={Journal of Controlled Release},
-      year={2026},
-      publisher={Elsevier}
+    @software{sood2026nanoformula,
+      author = {Sood, Hardik and Chawla, Ruchi},
+      title = {NanoFormula AI: Multi-Polymer Nanoparticle Formulation Optimizer and Virtual Screening Platform},
+      url = {https://github.com/hardiksood21/nanoformula-ai},
+      year = {2026},
+      institution = {Department of Pharmaceutical Engineering & Technology, IIT (BHU) Varanasi},
+      note = {Software repository. Manuscript in preparation.}
     }
     ```
     """)
