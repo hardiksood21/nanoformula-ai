@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nanoformula"
+version = "2.0.0"
+authors = [
+  { name="Hardik Sood", email="hardik.sood.phe24@itbhu.ac.in" },
+  { name="Dr. Ruchi Chawla", email="rchawla.phe@itbhu.ac.in" }
+]
+description = "Machine Learning-Driven Multi-Polymer Nanoparticle Formulation Optimizer & Virtual Screening Platform"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+dependencies = [
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "scikit-learn>=1.3.0",
+    "xgboost>=2.0.0",
+    "scipy>=1.11.0",
+    "shap>=0.44.0",
+    "rdkit>=2023.9.0",
+    "reportlab>=4.0.0",
+    "plotly>=5.18.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "requests>=2.31.0",
+    "streamlit>=1.35.0",
+    "pytest>=8.0.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/hardiksood21/nanoformula-ai"
+"Web Application" = "https://nanoformula-ai.streamlit.app"
+"Bug Tracker" = "https://github.com/hardiksood21/nanoformula-ai/issues"
