@@ -910,11 +910,12 @@ with tab_about:
     ```bibtex
     @software{sood2026nanoformula,
       author = {Sood, Hardik and Chawla, Ruchi},
-      title = {NanoFormula AI: Multi-Polymer Nanoparticle Formulation Optimizer and Virtual Screening Platform},
+      title = {NanoFormula AI: Open-Source Chemoinformatics and Machine Learning Platform for Multi-Objective Nanoparticle Design, Thermodynamic Compatibility Prediction, and Virtual Screening},
       url = {https://github.com/hardiksood21/nanoformula-ai},
+      howpublished = {\url{https://nanoformula-iitbhu.streamlit.app}},
       year = {2026},
       institution = {Department of Pharmaceutical Engineering & Technology, IIT (BHU) Varanasi},
-      note = {Software repository. Manuscript in preparation.}
+      note = {Software repository and web application. Manuscript in preparation.}
     }
     ```
     """)
