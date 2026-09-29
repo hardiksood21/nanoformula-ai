@@ -6,8 +6,14 @@ for Nanoparticle Formulation Models.
 import numpy as np
 import pandas as pd
 from typing import Dict, Any, List, Optional
-import shap
 import matplotlib.pyplot as plt
+
+try:
+    import shap
+    SHAP_AVAILABLE = True
+except Exception:
+    shap = None
+    SHAP_AVAILABLE = False
 
 FEATURE_DISPLAY_NAMES = {
     'polymer_MW': 'PLGA MW (kDa)',
