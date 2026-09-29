@@ -34,4 +34,4 @@ jobs:
 
       - name: Run Test Suite with Pytest
         run: |
-          pytest tests/ -v --tb=short
+          pytest tests/ -v -ra
