@@ -4,6 +4,7 @@ Department of Pharmaceutical Engineering & Technology, IIT (BHU) Varanasi
 Supervisor: Dr. Ruchi Chawla | Developer: Hardik Sood
 """
 
+import sys
 import os
 import io
 import pickle
@@ -16,6 +17,19 @@ import plotly.express as px
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# Cross-version numpy pickle compatibility shims (numpy 1.x <-> 2.x)
+if not hasattr(np, "_core"):
+    try:
+        import numpy.core as _core
+        sys.modules["numpy._core"] = _core
+        sys.modules["numpy._core.multiarray"] = _core.multiarray
+        if hasattr(_core, "numeric"):
+            sys.modules["numpy._core.numeric"] = _core.numeric
+        if hasattr(_core, "_multiarray_umath"):
+            sys.modules["numpy._core._multiarray_umath"] = _core._multiarray_umath
+    except Exception:
+        pass
 
 # Unified Package Imports
 import nanoformula as nf
@@ -74,13 +88,14 @@ st.markdown("""
 @st.cache_resource
 def load_models_bundle():
     bundle_path = os.path.join("saved_models", "nanoformula_models_bundle.pkl")
-    if not os.path.exists(bundle_path):
-        from nanoformula.ml.trainer import train_and_save_all
-        bundle = train_and_save_all()
-    else:
-        with open(bundle_path, "rb") as f:
-            bundle = pickle.load(f)
-    return bundle
+    if os.path.exists(bundle_path):
+        try:
+            with open(bundle_path, "rb") as f:
+                return pickle.load(f)
+        except Exception:
+            pass
+    from nanoformula.ml.trainer import train_and_save_all
+    return train_and_save_all()
 
 bundle = load_models_bundle()
 plga_optimizer = nf.PLGAFormulationOptimizer(bundle)
