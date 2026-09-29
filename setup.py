@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="nanoformula",
-    version="2.0.0",
+    version="2.1.0",
     author="Hardik Sood, Dr. Ruchi Chawla",
     author_email="hardik.sood.phe24@itbhu.ac.in",
     description="Machine Learning-Driven Multi-Polymer Nanoparticle Formulation Optimizer & Virtual Screening Platform",
