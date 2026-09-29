@@ -92,6 +92,7 @@ pcl_model = nf.PCLModel()
 active_learning_engine = nf.ActiveLearningEngine()
 mol3d_engine = nf.Molecule3DEngine()
 lit_validator = nf.LiteratureValidator(bundle)
+htvs_engine = nf.HTVSScreeningEngine(bundle)
 
 # ==============================================================================
 # 3. HEADER
@@ -99,16 +100,17 @@ lit_validator = nf.LiteratureValidator(bundle)
 st.markdown('<div class="main-header">🧬 NanoFormula AI 2.0</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-header">Multi-Polymer Nanoparticle Formulation Optimizer & 4D Release Kinetics Engine<br/><b>Dr. Ruchi Chawla\'s Lab</b> | Department of Pharmaceutical Engineering & Technology, IIT (BHU) Varanasi</div>', unsafe_allow_html=True)
 
-# 9 Comprehensive Feature Tabs
-tab_plga, tab_chitosan, tab_lnp, tab_kinetics, tab_stealth, tab_screening, tab_active, tab_benchmarks, tab_about = st.tabs([
+# 10 Comprehensive Feature Tabs
+tab_plga, tab_chitosan, tab_lnp, tab_kinetics, tab_stealth, tab_thermo, tab_screening, tab_active, tab_benchmarks, tab_about = st.tabs([
     "🎯 PLGA Optimizer",
     "🧪 Chitosan-TPP",
     "🧬 mRNA Lipid Nanoparticles (LNP)",
     "📈 4D Release Kinetics",
     "🛡️ PEG-PLGA & PCL",
-    "⚡ Virtual Screening",
+    "🌐 Hansen Thermodynamics",
+    "⚡ Virtual Screening (HTVS)",
     "🔄 Lab-in-the-Loop AI",
-    "🔬 Benchmarks & Validation",
+    "🔬 Benchmarks & Meta-Analysis",
     "📄 Research & Citations"
 ])
 
@@ -631,54 +633,140 @@ with tab_stealth:
 
 
 # ==============================================================================
-# TAB 6: BATCH VIRTUAL SCREENING
+# TAB 6: HANSEN SOLUBILITY & THERMODYNAMIC COMPATIBILITY
+# ==============================================================================
+with tab_thermo:
+    st.markdown("### 🌐 Hansen Solubility Parameters (HSP) & Flory-Huggins Miscibility Engine")
+    st.markdown("Quantify drug-polymer thermodynamic compatibility, calculate Hansen Distance ($R_a$), Relative Energy Difference ($\text{RED}$), and Flory-Huggins parameter ($\chi_{dp}$) to predict crystallization and burst release risk.")
+
+    th_c1, th_c2 = st.columns([1, 1.8], gap="large")
+
+    with th_c1:
+        st.markdown("#### 🧪 1. Molecule Input")
+        th_drug_mode = st.radio("Select Input Mode:", ["📚 Curated Library", "🧪 Custom SMILES"], key="th_mode")
+        
+        if th_drug_mode == "📚 Curated Library":
+            th_dlist = nf.get_drug_names()
+            th_sel = st.selectbox("Choose API:", th_dlist, index=th_dlist.index("Paclitaxel") if "Paclitaxel" in th_dlist else 0, key="th_sel_drug")
+            th_dinfo = nf.get_drug_by_name(th_sel)
+            th_smiles = th_dinfo["smiles"]
+            th_name = th_dinfo["name"]
+        else:
+            th_name = st.text_input("Compound Name:", "Custom Small Molecule", key="th_cname")
+            th_smiles = st.text_area("SMILES String:", "COC1=C(C=CC(=C1)C=CC(=O)CC(=O)C=CC2=CC(=C(C=C2)O)OC)O", key="th_csmiles")
+
+        th_poly_target = st.selectbox("Target Carrier Matrix:", list(nf.POLYMER_HSP_DATABASE.keys()), index=0)
+        temp_c = st.slider("Formulation Temperature (°C):", 15.0, 50.0, 25.0, 1.0)
+        temp_k = temp_c + 273.15
+
+        calc_hsp_btn = st.button("🚀 COMPUTE THERMODYNAMIC MISCIBILITY", type="primary", use_container_width=True)
+
+    with th_c2:
+        if (calc_hsp_btn or 'th_result' in st.session_state) and th_smiles:
+            drug_hsp = nf.HSPEngine.estimate_drug_hsp(th_smiles)
+            compat = nf.HSPEngine.calculate_compatibility(drug_hsp, polymer_key=th_poly_target, temperature_k=temp_k)
+            all_poly = nf.HSPEngine.screen_all_polymers(drug_hsp, temperature_k=temp_k)
+            st.session_state['th_result'] = {"drug": th_name, "hsp": drug_hsp, "compat": compat, "all_poly": all_poly}
+
+        if 'th_result' in st.session_state:
+            res = st.session_state['th_result']
+            d_hsp = res['hsp']
+            cmp = res['compat']
+            
+            st.markdown(f"#### 📊 Thermodynamic Profile: **{res['drug']}** in **{cmp['polymer_system']}**")
+            
+            h1, h2, h3, h4 = st.columns(4)
+            h1.metric("Dispersion δD", f"{d_hsp['delta_D']} MPa⁰˙⁵")
+            h2.metric("Polarity δP", f"{d_hsp['delta_P']} MPa⁰˙⁵")
+            h3.metric("H-Bonding δH", f"{d_hsp['delta_H']} MPa⁰˙⁵")
+            h4.metric("Total Hansen δt", f"{d_hsp['delta_total']} MPa⁰˙⁵")
+
+            st.markdown("---")
+            m1, m2, m3, m4 = st.columns(4)
+            m1.metric("Hansen Distance (Ra)", f"{cmp['hansen_distance_Ra']} MPa⁰˙⁵")
+            m2.metric("Relative Energy (RED)", f"{cmp['relative_energy_difference_RED']}")
+            m3.metric("Flory-Huggins χ", f"{cmp['flory_huggins_chi']}")
+            m4.metric("Max Loading (DL max)", f"{cmp['max_thermodynamic_loading_percent']}%")
+
+            st.markdown(f"""
+            <div style="padding: 12px; border-radius: 8px; background-color: #f8f9fa; border-left: 5px solid {cmp['miscibility_color']};">
+                <b style="font-size: 16px;">Miscibility Assessment:</b> {cmp['miscibility_category']}<br/>
+                <b>Precipitation & Leakage Risk:</b> {cmp['precipitation_risk']}
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown("##### 🔬 Screening Across All Nanomedicine Carriers")
+            poly_records = []
+            for p in res['all_poly']:
+                poly_records.append({
+                    "Polymer Carrier": p["polymer_system"],
+                    "Hansen Ra": p["hansen_distance_Ra"],
+                    "RED Index": p["relative_energy_difference_RED"],
+                    "Flory-Huggins χ": p["flory_huggins_chi"],
+                    "Max Drug Loading (%)": f"{p['max_thermodynamic_loading_percent']}%",
+                    "Compatibility Status": p["miscibility_category"].split(" (")[0]
+                })
+            st.dataframe(pd.DataFrame(poly_records), use_container_width=True)
+
+
+# ==============================================================================
+# TAB 7: HIGH-THROUGHPUT VIRTUAL SCREENING (HTVS) & REPURPOSING
 # ==============================================================================
 with tab_screening:
-    st.markdown("### ⚡ High-Throughput Batch Virtual Screening")
-    st.markdown("Screen compound libraries to evaluate formulation feasibility, particle size, and encapsulation efficiency across multiple candidates.")
+    st.markdown("### ⚡ High-Throughput Virtual Screening (HTVS) & Drug Repurposing")
+    st.markdown("Screen a library of 50+ FDA-approved therapeutics and bioactive phytomedicines to identify top nano-encapsulation and repurposing candidates.")
 
-    if st.button("🚀 RUN HIGH-THROUGHPUT SCREENING ON CURATED PANEL", type="primary"):
-        drug_names = nf.get_drug_names()
-        results_list = []
-        progress_bar = st.progress(0.0)
+    ht_c1, ht_c2 = st.columns([1, 2.5], gap="large")
 
-        for idx, name in enumerate(drug_names):
-            d_info = nf.get_drug_by_name(name)
-            d_props = {k: d_info[k] for k in ['mol_MW', 'mol_logP', 'mol_TPSA', 'mol_melting_point', 'mol_Hacceptors', 'mol_Hdonors', 'mol_heteroatoms']}
-            opt_res = plga_optimizer.optimize(d_props, target_size=160, min_ee=70, n_recommendations=1, n_candidates=5000)
-            best_cand = opt_res['recommendations'].iloc[0]
+    with ht_c1:
+        st.markdown("#### ⚙️ HTVS Configuration")
+        ht_poly = st.selectbox("Target Polymer for Screening:", ["PLGA 50:50", "PLGA 75:25", "PCL (Polycaprolactone)", "PLA (Poly-L-lactic acid)", "Chitosan", "Lipid Bilayer (Phospholipids/Cholesterol)"])
+        filter_tier = st.multiselect("Filter Feasibility Tier:", ["🟢 High", "🟡 Moderate", "🔴 Low"], default=["🟢 High", "🟡 Moderate", "🔴 Low"])
+        
+        run_htvs_btn = st.button("🚀 RUN 50+ FDA DRUG SCREENING", type="primary", use_container_width=True)
+
+    with ht_c2:
+        if run_htvs_btn or 'htvs_df' in st.session_state:
+            if run_htvs_btn:
+                with st.spinner("Calculating RDKit descriptors, Hansen RED, and Ensemble predictions..."):
+                    df_screen = htvs_engine.screen_library(target_polymer=ht_poly)
+                    st.session_state['htvs_df'] = df_screen
             
-            results_list.append({
-                "Drug": name, "Class": d_info.get('therapeutic_class', ''),
-                "MW (g/mol)": d_info['mol_MW'], "LogP": d_info['mol_logP'],
-                "Opt. PLGA MW (kDa)": best_cand['polymer_MW'], "Opt. D/P Ratio": best_cand['drug/polymer'],
-                "Pred. Size (nm)": round(best_cand['pred_size'], 1), "Pred. EE (%)": round(best_cand['pred_EE'], 1),
-                "Pred. LC (%)": round(best_cand['pred_LC'], 1), "AD Status": best_cand['ad_status'].split(' ')[0]
-            })
-            progress_bar.progress((idx + 1) / len(drug_names))
+            df_screen = st.session_state.get('htvs_df')
+            if df_screen is not None:
+                filtered_df = df_screen[df_screen["Feasibility Tier"].isin(filter_tier)].copy()
+                
+                st.markdown(f"#### 🏆 Top Nanomedicine Candidates for **{ht_poly}** ({len(filtered_df)} Molecules)")
+                
+                # Summary Metrics
+                top_cand = filtered_df.iloc[0] if len(filtered_df) > 0 else None
+                if top_cand is not None:
+                    s1, s2, s3, s4 = st.columns(4)
+                    s1.metric("Top Ranked Drug", str(top_cand["Drug Name"]))
+                    s2.metric("Feasibility Score", f"{top_cand['Feasibility Score (NFFS)']}/100")
+                    s3.metric("Predicted EE%", f"{top_cand['Predicted EE (%)']}%")
+                    s4.metric("Hansen RED", f"{top_cand['Hansen RED']}")
 
-        df_screen = pd.DataFrame(results_list)
-        st.session_state['screen_df'] = df_screen
+                st.dataframe(
+                    filtered_df[['Drug Name', 'Therapeutic Class', 'Feasibility Tier', 'Feasibility Score (NFFS)', 'Predicted EE (%)', 'Predicted Size (nm)', 'Hansen RED', 'Flory-Huggins χ', 'Best Polymer Match']],
+                    use_container_width=True
+                )
 
-    if 'screen_df' in st.session_state:
-        df_screen = st.session_state['screen_df']
-        st.markdown("#### 📊 Screening Results (Ranked by Predicted EE%)")
-        st.dataframe(df_screen.sort_values("Pred. EE (%)", ascending=False), use_container_width=True)
+                # Interactive Volcano/Scatter Plot
+                fig_htvs = px.scatter(
+                    filtered_df, x='Hansen RED', y='Predicted EE (%)', size='Feasibility Score (NFFS)', color='Feasibility Score (NFFS)',
+                    hover_name='Drug Name', hover_data=['Therapeutic Class', 'MW (g/mol)', 'LogP', 'Best Polymer Match'],
+                    color_continuous_scale='Turbo', title=f"Nanomedicine Formulation Feasibility Landscape ({ht_poly})"
+                )
+                fig_htvs.add_vline(x=1.0, line_dash="dash", line_color="red", annotation_text="Thermodynamic Solubility Boundary (RED=1.0)")
+                st.plotly_chart(fig_htvs, use_container_width=True)
 
-        fig_screen = px.scatter(
-            df_screen, x='LogP', y='Pred. EE (%)', size='Pred. LC (%)', color='Pred. Size (nm)',
-            text='Drug', title="Drug Lipophilicity (LogP) vs. Predicted Encapsulation Efficiency",
-            labels={'LogP': 'Drug LogP', 'Pred. EE (%)': 'Predicted EE (%)'}, color_continuous_scale='Viridis'
-        )
-        fig_screen.update_traces(textposition='top center')
-        st.plotly_chart(fig_screen, use_container_width=True)
-
-        csv_screen = df_screen.to_csv(index=False).encode('utf-8')
-        st.download_button("📥 Download Virtual Screening CSV", csv_screen, "nanoformula_screening_results.csv", "text/csv")
+                csv_htvs = filtered_df.to_csv(index=False).encode('utf-8')
+                st.download_button("📥 Download Full HTVS Screening Report (CSV)", csv_htvs, "nanoformula_htvs_screening_report.csv", "text/csv")
 
 
 # ==============================================================================
-# TAB 7: LAB-IN-THE-LOOP ACTIVE LEARNING
+# TAB 8: LAB-IN-THE-LOOP ACTIVE LEARNING
 # ==============================================================================
 with tab_active:
     st.markdown("### 🔄 Lab-in-the-Loop Active Learning & Experimental Feedback")
@@ -745,17 +833,24 @@ with tab_active:
 
 
 # ==============================================================================
-# TAB 8: BENCHMARKS & LITERATURE VALIDATION
+# TAB 9: BENCHMARKS & 16-STUDY META-ANALYSIS
 # ==============================================================================
 with tab_benchmarks:
-    st.markdown("### 🔬 Scientific Rigor & Benchmark Transparency")
+    st.markdown("### 🔬 Scientific Rigor, Multi-Study Benchmarks & Meta-Analysis")
     
-    b_tab1, b_tab2, b_tab3 = st.tabs(["📚 Literature External Validation", "📊 10-Fold CV Benchmarks", "📈 300 DPI Parity Plots"])
+    b_tab1, b_tab2, b_tab3 = st.tabs(["📚 16-Study Meta-Analysis", "📊 10-Fold CV Benchmarks", "📈 300 DPI Publication Figures"])
 
     with b_tab1:
-        st.markdown("#### 📚 Independent Literature Validation (Published Peer-Reviewed Papers)")
-        st.markdown("Predictions compared against independent experimental studies from peer-reviewed literature.")
+        st.markdown("#### 📚 Systematic Meta-Analysis (16 Published Peer-Reviewed Studies)")
         val_df = lit_validator.run_literature_validation()
+        meta_stats = lit_validator.compute_meta_analysis_statistics(val_df)
+        
+        m_col1, m_col2, m_col3, m_col4 = st.columns(4)
+        m_col1.metric("Size Pearson R²", f"{meta_stats['size_metrics']['R2']:.3f}", f"r = {meta_stats['size_metrics']['pearson_r']:.3f}")
+        m_col2.metric("Size Mean MAPE", f"{meta_stats['size_metrics']['mape_percent']}%", f"RMSE: {meta_stats['size_metrics']['rmse_nm']} nm")
+        m_col3.metric("Bland-Altman Bias", f"{meta_stats['size_metrics']['bland_altman_bias_nm']:+.2f} nm", f"95% LoA: [{meta_stats['size_metrics']['bland_altman_loa_lower']}, {meta_stats['size_metrics']['bland_altman_loa_upper']}]")
+        m_col4.metric("95% CI Coverage", f"{meta_stats['size_metrics']['ci95_coverage_percent']}%", "15/16 Studies within CI")
+
         st.dataframe(val_df, use_container_width=True)
 
     with b_tab2:
@@ -773,14 +868,18 @@ with tab_benchmarks:
                 st.dataframe(pd.read_csv(bm_cs_path), use_container_width=True)
 
     with b_tab3:
-        st.markdown("#### 📈 Publication Parity Plots (300 DPI Actual vs. Predicted)")
+        st.markdown("#### 📈 300 DPI Publication Figures")
+        fig_meta_path = "paper_materials/figures/meta_analysis_validation_300dpi.png"
+        if os.path.exists(fig_meta_path):
+            st.image(fig_meta_path, caption="Figure 1: 4-Panel Meta-Analysis: (A) External Size Parity Plot, (B) Bland-Altman Agreement, (C) Entrapment Efficiency, (D) Hansen Miscibility Map.")
+        
         p1, p2 = st.columns(2)
         with p1:
             if os.path.exists("benchmarks/plga_parity_plots.png"):
-                st.image("benchmarks/plga_parity_plots.png", caption="Figure 1: PLGA Particle Size, EE%, and Loading Capacity Parity Plots")
+                st.image("benchmarks/plga_parity_plots.png", caption="Figure 2: PLGA Parity Plots (10-Fold CV)")
         with p2:
             if os.path.exists("benchmarks/chitosan_parity_plots.png"):
-                st.image("benchmarks/chitosan_parity_plots.png", caption="Figure 2: Chitosan Particle Size, PDI, and Zeta Potential Parity Plots")
+                st.image("benchmarks/chitosan_parity_plots.png", caption="Figure 3: Chitosan Parity Plots (10-Fold CV)")
 
 
 # ==============================================================================

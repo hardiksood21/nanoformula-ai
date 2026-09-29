@@ -3,7 +3,7 @@ NanoFormula AI: Multi-Polymer Nanoparticle Formulation Optimizer & Virtual Scree
 Department of Pharmaceutical Engineering & Technology, IIT (BHU) Varanasi.
 """
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 __author__ = "Hardik Sood & Dr. Ruchi Chawla"
 
 # Chemoinformatics
@@ -73,6 +73,18 @@ from .validation import (
     PUBLISHED_LITERATURE_CASE_STUDIES
 )
 
+# Thermodynamics & Hansen Solubility
+from .thermodynamics import (
+    HSPEngine,
+    POLYMER_HSP_DATABASE
+)
+
+# High-Throughput Virtual Screening
+from .screening import (
+    HTVSScreeningEngine,
+    FDA_DRUG_REPURPOSING_LIBRARY
+)
+
 # Protocols & Reports
 from .protocols import (
     generate_plga_lab_sop,
@@ -117,6 +129,10 @@ __all__ = [
     "Molecule3DEngine",
     "LiteratureValidator",
     "PUBLISHED_LITERATURE_CASE_STUDIES",
+    "HSPEngine",
+    "POLYMER_HSP_DATABASE",
+    "HTVSScreeningEngine",
+    "FDA_DRUG_REPURPOSING_LIBRARY",
     "generate_plga_lab_sop",
     "generate_chitosan_lab_sop",
     "generate_formulation_pdf_report"

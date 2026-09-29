@@ -5,7 +5,9 @@ Comprehensive automated unit tests for NanoFormula AI advanced modules:
 - PEG-PLGA stealth grafting density and PCL degradation
 - Active Learning feedback ingestion and Gaussian Process surrogate updates
 - 3D molecular conformer generation and WebGL component creation
-- Literature external validation metrics
+- Hansen Solubility Parameters (HSP) & Flory-Huggins compatibility engine
+- High-Throughput Virtual Screening (HTVS) on 50+ FDA drug library
+- 16-Study Literature validation & Meta-analysis metrics
 - Top-level `import nanoformula as nf` namespace validation
 """
 
@@ -20,7 +22,7 @@ import nanoformula as nf
 
 def test_top_level_package_imports():
     """Verifies that all core classes and functions are cleanly accessible from nanoformula."""
-    assert nf.__version__ == "2.0.0"
+    assert nf.__version__ == "2.1.0"
     assert hasattr(nf, "DrugReleasePredictor")
     assert hasattr(nf, "LNPOptimizer")
     assert hasattr(nf, "PEGPLGAModel")
@@ -30,6 +32,8 @@ def test_top_level_package_imports():
     assert hasattr(nf, "LiteratureValidator")
     assert hasattr(nf, "PLGAFormulationOptimizer")
     assert hasattr(nf, "ChitosanFormulationOptimizer")
+    assert hasattr(nf, "HSPEngine")
+    assert hasattr(nf, "HTVSScreeningEngine")
 
 
 def test_drug_release_kinetics():
@@ -113,6 +117,51 @@ def test_peg_plga_and_pcl_models():
     assert pcl_res["predicted_ee_percent"] > 50.0
 
 
+def test_hansen_solubility_engine():
+    """Tests Hansen Solubility Parameter estimation, distance Ra, and Flory-Huggins calculation."""
+    # Curcumin SMILES
+    curcumin_smiles = "COC1=C(C=CC(=C1)C=CC(=O)CC(=O)C=CC2=CC(=C(C=C2)O)OC)O"
+    hsp = nf.HSPEngine.estimate_drug_hsp(curcumin_smiles)
+    
+    assert hsp["delta_D"] > 15.0
+    assert hsp["delta_P"] > 0.0
+    assert hsp["delta_H"] > 0.0
+    assert hsp["delta_total"] > 0.0
+    
+    # Test compatibility with PLGA 50:50
+    compat = nf.HSPEngine.calculate_compatibility(hsp, polymer_key="PLGA 50:50")
+    assert "hansen_distance_Ra" in compat
+    assert "relative_energy_difference_RED" in compat
+    assert compat["hansen_distance_Ra"] > 0.0
+    assert compat["relative_energy_difference_RED"] > 0.0
+    assert compat["max_thermodynamic_loading_percent"] > 0.0
+
+    # Test screening across all polymers
+    all_polys = nf.HSPEngine.screen_all_polymers(hsp)
+    assert len(all_polys) >= 5
+    assert all_polys[0]["relative_energy_difference_RED"] <= all_polys[-1]["relative_energy_difference_RED"]
+
+
+def test_htvs_screening_engine():
+    """Tests High-Throughput Virtual Screening pipeline on FDA drug library."""
+    bundle_path = os.path.join("saved_models", "nanoformula_models_bundle.pkl")
+    if os.path.exists(bundle_path):
+        import pickle
+        with open(bundle_path, "rb") as f:
+            bundle = pickle.load(f)
+        htvs = nf.HTVSScreeningEngine(bundle)
+    else:
+        htvs = nf.HTVSScreeningEngine()
+
+    df_screen = htvs.screen_library(target_polymer="PLGA 50:50")
+    assert isinstance(df_screen, pd.DataFrame)
+    assert len(df_screen) >= 20
+    assert "Feasibility Score (NFFS)" in df_screen.columns
+    assert "Predicted EE (%)" in df_screen.columns
+    assert "Hansen RED" in df_screen.columns
+    assert df_screen["Feasibility Score (NFFS)"].max() <= 100.0
+
+
 def test_active_learning_feedback_engine(tmp_path):
     """Tests real experimental batch submission, database persistence, and Bayesian GP surrogate update."""
     test_db = os.path.join(tmp_path, "test_feedback.json")
@@ -155,15 +204,23 @@ def test_molecule_3d_engine():
         assert "<svg" in svg_coreshell
 
 
-def test_literature_validation_suite():
-    """Tests literature benchmark execution and error verification."""
+def test_literature_validation_and_meta_analysis():
+    """Tests 16-study literature benchmark execution and meta-analysis statistical metrics."""
     bundle_path = os.path.join("saved_models", "nanoformula_models_bundle.pkl")
     if os.path.exists(bundle_path):
         import pickle
         with open(bundle_path, "rb") as f:
             bundle = pickle.load(f)
         validator = nf.LiteratureValidator(bundle)
-        val_df = validator.run_literature_validation()
-        assert len(val_df) >= 3
-        assert "Size MAPE (%)" in val_df.columns
-        assert "Inside 95% CI?" in val_df.columns
+        df_val = validator.run_literature_validation()
+        
+        assert len(df_val) == 16
+        assert "Exp. Size (nm)" in df_val.columns
+        assert "AI Pred. Size (nm)" in df_val.columns
+        
+        # Meta-analysis statistics
+        meta_stats = validator.compute_meta_analysis_statistics(df_val)
+        assert meta_stats["n_studies"] == 16
+        assert meta_stats["size_metrics"]["R2"] > 0.70
+        assert meta_stats["size_metrics"]["pearson_r"] > 0.80
+        assert meta_stats["size_metrics"]["mape_percent"] < 30.0
