@@ -1,7 +1,7 @@
 # 🧬 NanoFormula AI 2.1
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://nanoformula-ai.streamlit.app)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://nanoformula-iitbhu.streamlit.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests: Passing](https://img.shields.io/badge/Tests-16%2F16%20Passed-brightgreen.svg)](tests/)
 [![CI/CD](https://github.com/hardiksood21/nanoformula-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/hardiksood21/nanoformula-ai/actions)
@@ -9,7 +9,7 @@
 
 **Open-Source Chemoinformatics and Machine Learning Platform for Multi-Objective Nanoparticle Formulation Design, Hansen Solubility Thermodynamics, 4D Release Kinetics, and High-Throughput Virtual Screening**
 
-🌐 **Live Web Application:** [https://nanoformula-ai.streamlit.app](https://nanoformula-ai.streamlit.app)  
+🌐 **Live Web Application:** [https://nanoformula-iitbhu.streamlit.app](https://nanoformula-iitbhu.streamlit.app)  
 📄 **LaTeX Manuscript Draft:** [paper_materials/manuscript.tex](paper_materials/manuscript.tex) | [paper_materials/manuscript_draft.md](paper_materials/manuscript_draft.md)  
 📚 **Supplementary Information:** [paper_materials/supplementary_information.md](paper_materials/supplementary_information.md)
 

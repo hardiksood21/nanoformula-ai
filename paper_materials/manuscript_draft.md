@@ -149,7 +149,7 @@ NanoFormula AI 2.0 represents a comprehensive, validated, and user-friendly plat
 **Code and Tool Availability:**  
 The full open-source codebase, pre-trained model bundles, benchmarking pipelines, and web application are freely accessible at:  
 👉 GitHub: [https://github.com/hardiksood21/nanoformula-ai](https://github.com/hardiksood21/nanoformula-ai)  
-👉 Live Web App: [https://nanoformula-ai.streamlit.app](https://nanoformula-ai.streamlit.app)
+👉 Live Web App: [https://nanoformula-iitbhu.streamlit.app](https://nanoformula-iitbhu.streamlit.app)
 
 ---
 

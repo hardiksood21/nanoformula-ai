@@ -39,5 +39,5 @@ dependencies = [
 
 [project.urls]
 "Homepage" = "https://github.com/hardiksood21/nanoformula-ai"
-"Web Application" = "https://nanoformula-ai.streamlit.app"
+"Web Application" = "https://nanoformula-iitbhu.streamlit.app"
 "Bug Tracker" = "https://github.com/hardiksood21/nanoformula-ai/issues"
