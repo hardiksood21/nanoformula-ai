@@ -637,7 +637,7 @@ with tab_stealth:
 # ==============================================================================
 with tab_thermo:
     st.markdown("### 🌐 Hansen Solubility Parameters (HSP) & Flory-Huggins Miscibility Engine")
-    st.markdown("Quantify drug-polymer thermodynamic compatibility, calculate Hansen Distance ($R_a$), Relative Energy Difference ($\text{RED}$), and Flory-Huggins parameter ($\chi_{dp}$) to predict crystallization and burst release risk.")
+    st.markdown(r"Quantify drug-polymer thermodynamic compatibility, calculate Hansen Distance ($R_a$), Relative Energy Difference ($\text{RED}$), and Flory-Huggins parameter ($\chi_{dp}$) to predict crystallization and burst release risk.")
 
     th_c1, th_c2 = st.columns([1, 1.8], gap="large")
 
@@ -887,7 +887,7 @@ with tab_benchmarks:
 # ==============================================================================
 with tab_about:
     st.markdown("### 📄 Research Methodology & Citations")
-    st.markdown("""
+    st.markdown(r"""
     #### 💡 Theoretical Framework
     NanoFormula AI 2.0 addresses formulation bottlenecks across nanomedicine platforms:
     1. **Chemoinformatics**: Automated RDKit descriptor calculation and PubChem API integration.
