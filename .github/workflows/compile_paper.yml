@@ -1,0 +1,36 @@
+name: Compile LaTeX Manuscript & Paper Assets
+
+on:
+  push:
+    paths:
+      - 'paper_materials/**'
+      - '.github/workflows/compile_paper.yml'
+  workflow_dispatch:
+
+jobs:
+  build_pdf:
+    name: Build Submission PDFs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Compile Manuscript PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: manuscript.tex
+          working_directory: paper_materials
+
+      - name: Compile Cover Letter PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: cover_letter.tex
+          working_directory: paper_materials
+
+      - name: Upload Submission PDF Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: NanoFormula_AI_Submission_Package
+          path: |
+            paper_materials/manuscript.pdf
+            paper_materials/cover_letter.pdf

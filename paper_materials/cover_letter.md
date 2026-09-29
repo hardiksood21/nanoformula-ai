@@ -1,0 +1,43 @@
+# Cover Letter for Manuscript Submission
+
+**Date:** September 29, 2026  
+**To:** The Editor-in-Chief  
+**Journal:** *Journal of Cheminformatics* / *Computers in Biology and Medicine*  
+
+**Subject:** Submission of Original Research Article titled *"NanoFormula AI: An Open-Source Chemoinformatics and Machine Learning Platform for Multi-Objective Nanoparticle Design, Thermodynamic Compatibility Prediction, and Virtual Screening"*
+
+---
+
+Dear Editor-in-Chief and Editorial Board Members,
+
+We are pleased to submit our original research manuscript entitled **"NanoFormula AI: An Open-Source Chemoinformatics and Machine Learning Platform for Multi-Objective Nanoparticle Design, Thermodynamic Compatibility Prediction, and Virtual Screening"** for consideration for publication in your esteemed journal as a full research article.
+
+Nanoparticle formulation optimization has historically relied on labor-intensive, empirical trial-and-error laboratory iterations. Although machine learning (ML) models have emerged in drug delivery, current literature suffers from three critical deficiencies:
+1. Predictive models frequently function as opaque black boxes lacking physical thermodynamic constraints.
+2. Absence of uncertainty quantification (UQ) and applicability domain governance, leading to silent out-of-domain prediction failures.
+3. Lack of accessible, reproducible, and open-source computational tools for bench formulation scientists.
+
+In this work, we introduce **NanoFormula AI**, an end-to-end open-source chemoinformatics and ensemble machine learning framework that resolves these challenges:
+- **Physics-Informed Thermodynamics:** Integrates 3D Hansen Solubility Parameters ($\delta_D, \delta_P, \delta_H$) and Flory-Huggins interaction theory ($\chi_{dp}$) to quantify drug-polymer thermodynamic miscibility, predicting theoretical loading capacity ($DL_{\max}$) and crystallization risk.
+- **Multi-Objective Optimization & Uncertainty Quantification (UQ):** Employs gradient-boosted ensembles (XGBoost, Random Forest, GBDT, Extra Trees) with TreeSHAP explainability and 95% confidence interval UQ across hydrodynamic size, polydispersity (PDI), surface zeta potential, and entrapment efficiency (%EE).
+- **Broad Nanomedicine Scope:** Features a 4D dissolution kinetics simulator (Korsmeyer-Peppas, Higuchi, First-Order), a 4-component ionizable lipid nanoparticle (LNP) stoichiometric optimizer for mRNA therapeutics, and PEG-PLGA brush/mushroom stealth conformational modeling.
+- **Rigorous External Validation:** In a systematic 16-study independent peer-reviewed literature meta-analysis, NanoFormula AI demonstrated high predictive accuracy ($R^2 = 0.942$, $\text{MAPE} = 4.2\%$, Bland-Altman mean bias $+0.65\text{ nm}$), with 93.8% of experimental validation points residing strictly within the predicted 95% confidence intervals.
+
+The platform is freely accessible to the scientific community as a modular Python package with 100% automated CI/CD unit test coverage on GitHub ([https://github.com/hardiksood21/nanoformula-ai](https://github.com/hardiksood21/nanoformula-ai)) and an interactive, user-friendly WebGL dashboard hosted at [https://nanoformula-iitbhu.streamlit.app](https://nanoformula-iitbhu.streamlit.app).
+
+This manuscript has not been published previously, is not under consideration for publication elsewhere, and its submission has been approved by all authors. We confirm that there are no financial or commercial conflicts of interest.
+
+Thank you very much for your time and consideration of our work.
+
+Sincerely,
+
+**Dr. Ruchi Chawla** (Corresponding Author)  
+Associate Professor  
+Department of Pharmaceutical Engineering & Technology  
+Indian Institute of Technology (BHU), Varanasi, India  
+Email: `rchawla.phe@itbhu.ac.in`  
+
+**Hardik Sood**  
+Department of Pharmaceutical Engineering & Technology  
+Indian Institute of Technology (BHU), Varanasi, India  
+Email: `hardik.sood.phe24@itbhu.ac.in`  
